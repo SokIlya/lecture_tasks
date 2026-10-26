@@ -89,7 +89,7 @@ int main() {
 
     int height;
     std::cout << "Enter height of image: ";
-    std::cin >> heights[n];
+    std::cin >> height;
 
     int width;
     std::cout << "Enter width of image: ";
@@ -138,7 +138,7 @@ int main() {
                 << "Cloud coverage: " << satellite->cloud_coverage << '\n';
     }
 
-    std::cout << "Size: " << heights[n] << " x " << widths[n] << '\n'
+    std::cout << "Size: " << heights[n] << " * " << widths[n] << '\n'
               << "Pixels:\n";
     for (int h = 0; h < heights[n]; ++h) {
       for (int w = 0; w < widths[n]; ++w) {

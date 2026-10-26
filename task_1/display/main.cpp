@@ -3,8 +3,7 @@
 
 constexpr int N_ROWS = 5;
 constexpr int N_COLS = 10;
-constexpr int WORD_BUFFER_SIZE =
-    N_COLS + 2;  // 10 символов + '\0' + 1 для обнаружения превышения
+constexpr int WORD_BUFFER_SIZE = N_COLS + 2;
 
 bool are_equal_strings(const char* string1, const char* string2) {
   int i = 0;
