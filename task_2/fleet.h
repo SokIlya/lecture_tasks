@@ -21,7 +21,7 @@ class Fleet {
   std::size_t size() const;
   double total_energy() const;
   void print_list(std::ostream& out) const;
-  void print_novice(std::ostream& out, int min_score = 6) const;
+  void print_novice(std::ostream& out, int min_novice_score = 6) const;
 
   void focus(const std::string& id);
   void show_focus(std::ostream& out) const;
@@ -31,5 +31,3 @@ class Fleet {
   std::weak_ptr<InventoryItem> focused_item;
   InspectionService inspection;
 };
-
-void run_commands(Fleet& fleet, std::istream& in, std::ostream& out);

@@ -12,7 +12,7 @@ class InventoryItem {
   virtual void describe(std::ostream& out) const = 0;
 
   virtual double daily_energy() const;
-  virtual bool suitable_for_novice(int min_score = 6) const;
+  virtual bool suitable_for_novice(int min_novice_score = 6) const;
 };
 
 std::ostream& operator<<(std::ostream& out, const InventoryItem& item);
@@ -21,7 +21,7 @@ bool operator==(const InventoryItem& left, const InventoryItem& right);
 
 class Item : public InventoryItem {
  public:
-  Item(const std::string& item_id, const std::string& item_name);
+  Item(const std::string& id, const std::string& name);
 
   const std::string& inventory_id() const override;
   const std::string& get_name() const override;
@@ -40,54 +40,54 @@ class EnergyConsumer {
 
 class Transport : public Item {
  public:
-  Transport(const std::string& item_id, const std::string& item_name,
+  Transport(const std::string& id, const std::string& name,
             int novice_score);
 
-  bool suitable_for_novice(int min_score = 6) const override;
+  bool suitable_for_novice(int min_novice_score = 6) const override;
 
  private:
-  int score;
+  int novice_score;
+};
+
+class Bike : public Transport {
+ public:
+  Bike(const std::string& id, const std::string& name, int novice_score);
 };
 
 class ElectricScooter : public Transport, public EnergyConsumer {
  public:
-  ElectricScooter(const std::string& item_id, const std::string& item_name,
+  ElectricScooter(const std::string& id, const std::string& name,
                   double daily_consumption, int novice_score);
 
   double daily_energy() const override;
 
  private:
-  double energy;
-};
-
-class Bike : public Transport {
- public:
-  Bike(const std::string& item_id, const std::string& item_name, int novice_score);
+  double daily_consumption;
 };
 
 class ElectricBike : public Transport, public EnergyConsumer {
  public:
-  ElectricBike(const std::string& item_id, const std::string& item_name,
+  ElectricBike(const std::string& id, const std::string& name,
                double daily_consumption, int novice_score);
 
   double daily_energy() const override;
 
  private:
-  double energy;
+  double daily_consumption;
 };
 
 class Helmet : public Item {
  public:
-  Helmet(const std::string& item_id, const std::string& item_name);
+  Helmet(const std::string& id, const std::string& name);
 };
 
 class Dock : public Item, public EnergyConsumer {
  public:
-  Dock(const std::string& item_id, const std::string& item_name,
+  Dock(const std::string& id, const std::string& name,
        double daily_consumption);
 
   double daily_energy() const override;
 
  private:
-  double energy;
+  double daily_consumption;
 };

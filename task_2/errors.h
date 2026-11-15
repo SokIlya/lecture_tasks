@@ -5,7 +5,7 @@
 
 class FleetError : public std::exception {
  public:
-  explicit FleetError(const std::string& error_message);
+  explicit FleetError(const std::string& message);
   const char* what() const noexcept override;
 
  private:
@@ -19,5 +19,5 @@ class InspectionRejected : public FleetError {
 
 class CommandError : public FleetError {
  public:
-  explicit CommandError(const std::string& error_message);
+  explicit CommandError(const std::string& message);
 };
