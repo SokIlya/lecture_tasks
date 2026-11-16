@@ -47,15 +47,14 @@ class EnergyConsumer {
   virtual double get_charge_level() const = 0;
   virtual double energy_per_minute() const = 0;
   virtual void charge() = 0;
- 
+
  protected:
   double charge_level = 0.0;
 };
 
 class Transport : public Item {
  public:
-  Transport(const std::string& id, const std::string& name,
-            int novice_score);
+  Transport(const std::string& id, const std::string& name, int novice_score);
 
   bool suitable_for_novice(int min_novice_score = 6) const override;
 
@@ -111,7 +110,7 @@ class ElectricBike : public Transport, public EnergyConsumer {
  public:
   ElectricBike(const std::string& id, const std::string& name,
                double consumption_per_minute, int novice_score,
-                  double accumulator_capacity);
+               double accumulator_capacity);
 
   double get_charge_level() const override;
   double energy_per_minute() const override;

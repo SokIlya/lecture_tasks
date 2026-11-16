@@ -1,11 +1,11 @@
-#include "errors.h"
-#include "fleet.h"
-
 #include <iomanip>
 #include <iostream>
 #include <memory>
 #include <string>
 #include <utility>
+
+#include "errors.h"
+#include "fleet.h"
 
 int main() {
   Fleet fleet;
@@ -26,7 +26,8 @@ int main() {
           int score;
           std::cin >> id >> name >> energy >> score >> accumulator_capacity;
 
-          auto scooter = std::make_unique<ElectricScooter>(id, name, energy, score, accumulator_capacity);
+          auto scooter = std::make_unique<ElectricScooter>(
+              id, name, energy, score, accumulator_capacity);
 
           fleet.add(std::move(scooter));
 
@@ -58,7 +59,8 @@ int main() {
           int score;
           std::cin >> id >> name >> energy >> score >> accumulator_capacity;
 
-          auto ebike = std::make_unique<ElectricBike>(id, name, energy, score, accumulator_capacity);
+          auto ebike = std::make_unique<ElectricBike>(id, name, energy, score,
+                                                      accumulator_capacity);
 
           fleet.add(std::move(ebike));
 
@@ -78,7 +80,8 @@ int main() {
           double accumulator_capacity;
           std::cin >> id >> name >> energy >> accumulator_capacity;
 
-          auto dock = std::make_unique<Dock>(id, name, energy, accumulator_capacity);
+          auto dock =
+              std::make_unique<Dock>(id, name, energy, accumulator_capacity);
 
           fleet.add(std::move(dock));
 
@@ -87,11 +90,12 @@ int main() {
         }
 
       } else if (cmd == "energy") {
-        std::cout << std::fixed << std::setprecision(1) << fleet.total_energy() << '\n';
+        std::cout << std::fixed << std::setprecision(1) << fleet.total_energy()
+                  << '\n';
 
       } else if (cmd == "novice") {
-      fleet.print_novice(std::cout);
-        
+        fleet.print_novice(std::cout);
+
       } else if (cmd == "list") {
         fleet.print_list(std::cout);
 
@@ -109,16 +113,16 @@ int main() {
         std::cin >> id;
 
         fleet.remove(id);
-        
+
       } else if (cmd == "charge") {
         std::string id;
         std::cin >> id;
 
         fleet.charge_item(id);
-        
+
       } else if (cmd == "print_charge") {
         fleet.print_charge(std::cout);
-  
+
       } else if (cmd == "rent") {
         std::string id;
         int age;
@@ -140,12 +144,12 @@ int main() {
       } else {
         throw CommandError("unknown command");
       }
-  }
-  
+    }
+
     catch (const InspectionRejected& error) {
       std::cout << "inspection error: " << error.what() << '\n';
     }
-    
+
     catch (const OfferItemError& error) {
       std::cout << "offer item error: " << error.what() << '\n';
     }
@@ -153,11 +157,11 @@ int main() {
     catch (const OfferRideError& error) {
       std::cout << "offer ride error: " << error.what() << '\n';
     }
-    
+
     catch (const GetItemError& error) {
       std::cout << "get item error: " << error.what() << '\n';
     }
-    
+
     catch (const CommandError& error) {
       std::cout << "command error: " << error.what() << '\n';
     }
