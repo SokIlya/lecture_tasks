@@ -21,3 +21,18 @@ class CommandError : public FleetError {
  public:
   explicit CommandError(const std::string& message);
 };
+
+class OfferItemError : public FleetError {
+ public:
+  explicit OfferItemError(const std::string& message);
+};
+
+class OfferRideError : public FleetError {
+ public:
+  explicit OfferRideError(const std::string& message);
+};
+
+class GetItemError : public FleetError {
+ public:
+  explicit GetItemError(const std::string& message);
+};

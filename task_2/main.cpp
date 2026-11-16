@@ -22,10 +22,11 @@ int main() {
           std::string id;
           std::string name;
           double energy;
+          double accumulator_capacity;
           int score;
-          std::cin >> id >> name >> energy >> score;
+          std::cin >> id >> name >> energy >> score >> accumulator_capacity;
 
-          auto scooter = std::make_unique<ElectricScooter>(id, name, energy, score);
+          auto scooter = std::make_unique<ElectricScooter>(id, name, energy, score, accumulator_capacity);
 
           fleet.add(std::move(scooter));
 
@@ -39,14 +40,25 @@ int main() {
 
           fleet.add(std::move(bike));
 
+        } else if (item_type == "surrey_bike") {
+          std::string id;
+          std::string name;
+          int score;
+          std::cin >> id >> name >> score;
+
+          auto surrey_bike = std::make_unique<SurreyBike>(id, name, score);
+
+          fleet.add(std::move(surrey_bike));
+
         } else if (item_type == "ebike") {
           std::string id;
           std::string name;
           double energy;
+          double accumulator_capacity;
           int score;
-          std::cin >> id >> name >> energy >> score;
+          std::cin >> id >> name >> energy >> score >> accumulator_capacity;
 
-          auto ebike = std::make_unique<ElectricBike>(id, name, energy, score);
+          auto ebike = std::make_unique<ElectricBike>(id, name, energy, score, accumulator_capacity);
 
           fleet.add(std::move(ebike));
 
@@ -63,9 +75,10 @@ int main() {
           std::string id;
           std::string name;
           double energy;
-          std::cin >> id >> name >> energy;
+          double accumulator_capacity;
+          std::cin >> id >> name >> energy >> accumulator_capacity;
 
-          auto dock = std::make_unique<Dock>(id, name, energy);
+          auto dock = std::make_unique<Dock>(id, name, energy, accumulator_capacity);
 
           fleet.add(std::move(dock));
 
@@ -96,6 +109,30 @@ int main() {
         std::cin >> id;
 
         fleet.remove(id);
+        
+      } else if (cmd == "charge") {
+        std::string id;
+        std::cin >> id;
+
+        fleet.charge_item(id);
+        
+      } else if (cmd == "print_charge") {
+        fleet.print_charge(std::cout);
+  
+      } else if (cmd == "rent") {
+        std::string id;
+        int age;
+        int minutes;
+        std::cin >> id >> age >> minutes;
+
+        double cost = fleet.rent_item(id, age, minutes);
+        std::cout << cost << '\n';
+
+      } else if (cmd == "release") {
+        std::string id;
+        std::cin >> id;
+
+        fleet.release_item(id);
 
       } else if (cmd == "quit") {
         break;
@@ -105,11 +142,26 @@ int main() {
       }
   }
   
-  catch (const FleetError& error) {
-    std::cout << "error: " << error.what() << '\n';
+    catch (const InspectionRejected& error) {
+      std::cout << "inspection error: " << error.what() << '\n';
+    }
+    
+    catch (const OfferItemError& error) {
+      std::cout << "offer item error: " << error.what() << '\n';
+    }
+
+    catch (const OfferRideError& error) {
+      std::cout << "offer ride error: " << error.what() << '\n';
+    }
+    
+    catch (const GetItemError& error) {
+      std::cout << "get item error: " << error.what() << '\n';
+    }
+    
+    catch (const CommandError& error) {
+      std::cout << "command error: " << error.what() << '\n';
+    }
   }
 
-  }
-  
   return 0;
 }

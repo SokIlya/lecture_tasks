@@ -44,7 +44,7 @@ void Fleet::add(std::unique_ptr<InventoryItem> item) {
 }
 
 void Fleet::remove(const std::string& id) {
-    int items_size = static_cast<int>(items.size());
+    int items_size = static_cast<int>(size());
 
     for (int i = 0; i < items_size; ++i) {
         if (items[i]->inventory_id() == id) {
@@ -61,11 +61,11 @@ std::size_t Fleet::size() const {
 }
 
 double Fleet::total_energy() const {
-    int items_size = static_cast<int>(items.size());
+    int items_size = static_cast<int>(size());
     double total = 0.0;
 
     for (int i = 0; i < items_size; ++i) {
-        total += items[i]->daily_energy();
+        total += items[i]->energy_per_minute();
     }
 
     return total;
@@ -77,7 +77,7 @@ bool compare_items(const std::shared_ptr<InventoryItem>& a,
 }
 
 void Fleet::print_list(std::ostream& out) const {
-    int items_size = static_cast<int>(items.size());
+    int items_size = static_cast<int>(size());
 
     std::vector<std::shared_ptr<InventoryItem>> sorted_items(items_size);
 
@@ -93,15 +93,45 @@ void Fleet::print_list(std::ostream& out) const {
 }
 
 void Fleet::print_novice(std::ostream& out, int min_novice_score) const {
-    for (int i = 0; i < static_cast<int>(items.size()); ++i) {
+    for (int i = 0; i < static_cast<int>(size()); ++i) {
         if (items[i]->suitable_for_novice(min_novice_score)) {
             out << *items[i] << '\n';
         }
     }
 }
 
+void Fleet::print_charge(std::ostream& out) const {
+    for (int i = 0; i < static_cast<int>(size()); ++i) {
+        auto consumer = std::dynamic_pointer_cast<EnergyConsumer>(items[i]);
+
+        if (consumer) {
+            out << *items[i] << ' ' << consumer->get_charge_level() << '\n';
+        }
+    }
+}
+
+void Fleet::charge_item(const std::string& id) {
+    for (int i = 0; i < static_cast<int>(size()); ++i) {
+        if (items[i]->inventory_id() != id) {
+            continue;
+        }
+
+        auto consumer = std::dynamic_pointer_cast<EnergyConsumer>(items[i]);
+
+        if (!consumer) {
+            throw CommandError("this item have no accumulator");
+        }
+
+        consumer->charge();
+
+        return;
+    }
+
+    throw GetItemError("id not found");
+}
+
 void Fleet::focus(const std::string& id) {
-    int items_size = static_cast<int>(items.size());
+    int items_size = static_cast<int>(size());
 
     for (int i = 0; i < items_size; ++i) {
         if (items[i]->inventory_id() == id) {
@@ -120,4 +150,44 @@ void Fleet::show_focus(std::ostream& out) const {
         std::shared_ptr<InventoryItem> item = focused_item.lock();
         out << *item << '\n';
     }
+}
+
+double Fleet::rent_item(const std::string& id, int age, int minutes) {
+    for (int i = 0; i < static_cast<int>(size()); ++i) {
+        if (items[i]->inventory_id() != id) {
+            continue;
+        }
+
+        auto item = items[i];
+
+        if (!item->is_available()) {
+            throw GetItemError("item is not available");
+        }
+
+        auto transport = std::dynamic_pointer_cast<Transport>(item);
+        double cost = 0;
+
+        if (transport) {
+            cost = transport->offer_ride(age, minutes);
+        } else {
+            item->offer_item(age, minutes);
+        }
+
+        item->take();
+
+        return cost;
+    }
+
+    throw GetItemError("id not found");
+}
+
+void Fleet::release_item(const std::string& id) {
+    for (int i = 0; i < static_cast<int>(size()); ++i) {
+        if (items[i]->inventory_id() == id) {
+            items[i]->release();
+            return;
+        }
+    }
+
+    throw GetItemError("id not found");
 }

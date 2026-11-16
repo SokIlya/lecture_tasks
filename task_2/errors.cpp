@@ -11,3 +11,12 @@ InspectionRejected::InspectionRejected(): FleetError("inspection rejected") {}
 
 
 CommandError::CommandError(const std::string& message) : FleetError(message) {}
+
+
+OfferItemError::OfferItemError(const std::string& message) : FleetError(message) {}
+
+
+OfferRideError::OfferRideError(const std::string& message) : FleetError(message) {}
+
+
+GetItemError::GetItemError(const std::string& message) : FleetError(message) {}
